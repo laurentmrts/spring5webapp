@@ -24,27 +24,40 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("Started in SpringBoot.");
+
         Author tolkien = new Author("JRR", "Tolkien");
         Book lotr = new Book("Seigneur des Anneaux : la communeautée de l'Anneau", "152469");
+        bookRepository.save(lotr);
+        authorRepository.save(tolkien);
         tolkien.getBooks().add(lotr);
         lotr.getAuthors().add(tolkien);
-
-        authorRepository.save(tolkien);
-        bookRepository.save(lotr);
-
-        Author dick = new Author("PK", "Dick");
-        Book ubik = new Book("Ubik", "152467");
-        dick.getBooks().add(ubik);
-        ubik.getAuthors().add(dick);
-
-        authorRepository.save(dick);
-        bookRepository.save(ubik);
-
-        System.out.println("Number of books : " + bookRepository.count());
 
         Publisher folio = new Publisher("Folio", "Avenue de Paris", "Paris", "IDF", 75000);
         publisherRepository.save(folio);
 
+        lotr.setPublisher(folio);
+        folio.getBooks().add(lotr);
+        publisherRepository.save(folio);
+
+
+        Author dick = new Author("PK", "Dick");
+        Book ubik = new Book("Ubik", "152467");
+        authorRepository.save(dick);
+        bookRepository.save(ubik);
+        dick.getBooks().add(ubik);
+        ubik.getAuthors().add(dick);
+
+        publisherRepository.save(folio);
+        ubik.setPublisher(folio);
+        folio.getBooks().add(ubik);
+
+        lotr.setPublisher(folio);
+        folio.getBooks().add(lotr);
+        publisherRepository.save(folio);
+
+        System.out.println("Number of books : " + bookRepository.count());
         System.out.println("Number of publisher : " + publisherRepository.count());
+        System.out.println("Number of books in publisher : " + folio.getBooks().size());
     }
 }
